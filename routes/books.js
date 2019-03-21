@@ -18,7 +18,7 @@ router.get('/books', (req, res) => {
 });
 //     get /books/new - Shows the create new book form.
 router.get('/new', (req, res, next) => {
-    res.render("new-book", {Title: "Fill out this form to add a book to this database"});
+    res.render("new-book", {Title: "Fill out this form to add a book to our database"});
 });
 //     post /books/new - Posts a new book to the database.
 router.post('/new', (req, res, next) => {
@@ -44,7 +44,11 @@ router.get('/books/:id', (req, res, next) => {
 //     post /books/:id - Updates book info in the database.
 router.post('/books/:id', (req, res, next) => {
     Book.findById(req.params.id).then(function(book){
+        if(book) {
         return book.update(req.body);
+        } else {
+            res.render('page-not-found', 404);
+          }
     }).then(function(books){
         res.redirect("/books");
     }).catch(function(err){
@@ -55,8 +59,12 @@ router.post('/books/:id', (req, res, next) => {
 //         It can be helpful to create a new “test” book to test deleting.
 router.post('/:id/delete', (req, res) => {
     Book.findById(req.params.id).then(function(book){
+    if(book) {
         return book.destroy();
-    }).then(function(){
+    } else {
+        res.render('page-not-found', 404);
+      }
+    }).then(function(book){
         res.redirect("/books")
     }).catch(function(err){
         res.send(500);
