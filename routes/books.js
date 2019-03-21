@@ -29,24 +29,23 @@ router.post('/new', (req, res, next) => {
     });
 });
 //     get /books/:id - Shows book detail form.
-router.get('/:id', (req, res, next) => {
-    Book.findById(req.params.id).then(function(books) {
-        if(books) {
-            res.render('update-book',{books: books});
+router.get('/books/:id', (req, res, next) => {
+    Book.findById(req.params.id).then(function(book) {
+        if(book) {
+            res.render('update-book',{books: book});
           } else {
-            res.render('page-not-found');
+            res.render('page-not-found', 404);
           }
-        })
-        .catch((err) => {
+        }).catch((err) => {
           res.send(500, err);
         })
       });
 
 //     post /books/:id - Updates book info in the database.
-router.post('/:id', (req, res, next) => {
+router.post('/books/:id', (req, res, next) => {
     Book.findById(req.params.id).then(function(book){
         return book.update(req.body);
-    }).then(function(book){
+    }).then(function(books){
         res.redirect("/books");
     }).catch(function(err){
         res.send(500);
