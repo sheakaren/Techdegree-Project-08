@@ -25,6 +25,16 @@ router.post('/new', (req, res, next) => {
     Book.create(req.body).then(function(book){
         res.redirect('/books/' + book.id);
     }).catch(function(err){
+        if(err.name === "SequelizeValidationError") {
+            res.render("/books/new", {
+                book: Book.build(req.body),
+                title: "Add a new book",
+                errors: err.errors
+            });
+        } else {
+            throw err;
+        }
+    }).catch(function(err){
         res.send(500);
     });
 });
@@ -32,12 +42,12 @@ router.post('/new', (req, res, next) => {
 router.get('/books/:id', (req, res, next) => {
     Book.findById(req.params.id).then(function(book) {
         if(book) {
-            res.render('update-book',{books: book});
+            res.render('update-book',{books: book, title: "Update a book"});
           } else {
             res.render('page-not-found', 404);
           }
         }).catch((err) => {
-          res.send(500, err);
+          res.send(500);
         })
       });
 
@@ -51,6 +61,18 @@ router.post('/books/:id', (req, res, next) => {
           }
     }).then(function(books){
         res.redirect("/books");
+    }).catch(function(err){
+        if(err.name === "SequelizeValidationError") {
+            var book = Book.build(req.body);
+            book.id = req.params.id;
+            res.render("update-book", {
+                book: book,
+                title: "Edit book",
+                errors: err.errors
+            });
+        } else {
+            throw err;
+        }
     }).catch(function(err){
         res.send(500);
     });
