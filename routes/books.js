@@ -6,7 +6,7 @@ var Book = require("../models").Book;
 // At the very least, you will need the following routes:
 //     get / - Home route should redirect to the /books route.
 router.get('/', (req, res, next) => {
-    Book.findAll({order: [["id", "ASC"]]}).then(function(book){
+    Book.findAll({order: [["id", "ASC"]]}).then(function(books){
         res.render("index", {books: books});
     }).catch(function(err){
         res.send(500);
@@ -17,38 +17,50 @@ router.get('/books', (req, res) => {
     res.render("index")
 });
 //     get /books/new - Shows the create new book form.
-router.get('/books/new', (req, res, next) => {
-    res.render("new-book");
+router.get('/new', (req, res, next) => {
+    res.render("new-book", {Title: "Fill out this form to add a book to this database"});
 });
 //     post /books/new - Posts a new book to the database.
-router.post('/books/new', (req, res, next) => {
+router.post('/new', (req, res, next) => {
     Book.create(req.body).then(function(book){
-        res.redirect('/books');
+        res.redirect('/books/' + book.id);
     }).catch(function(err){
         res.send(500);
     });
 });
 //     get /books/:id - Shows book detail form.
-router.get('/books/:id', (req, res, next) => {
-    Book.findById(req.params.id).then(function(book) {
-        res.render("update-book", {books: books})
-    });
-});
+router.get('/:id', (req, res, next) => {
+    Book.findById(req.params.id).then(function(books) {
+        if(books) {
+            res.render('update-book',{books: books});
+          } else {
+            res.render('page-not-found');
+          }
+        })
+        .catch((err) => {
+          res.send(500, err);
+        })
+      });
+
 //     post /books/:id - Updates book info in the database.
-router.post('/books/:id', (req, res, next) => {
+router.post('/:id', (req, res, next) => {
     Book.findById(req.params.id).then(function(book){
         return book.update(req.body);
     }).then(function(book){
         res.redirect("/books");
-    })
+    }).catch(function(err){
+        res.send(500);
+    });
 });
 //     post /books/:id/delete - Deletes a book. Careful, this can’t be undone.
 //         It can be helpful to create a new “test” book to test deleting.
-router.post('/books/:id/delete', (req, res) => {
+router.post('/:id/delete', (req, res) => {
     Book.findById(req.params.id).then(function(book){
         return book.destroy();
     }).then(function(){
         res.redirect("/books")
+    }).catch(function(err){
+        res.send(500);
     });
 });
 // Set up a custom error handler middleware function that logs the error to the console 

@@ -4,9 +4,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const sequelize = require('sequelize');
-const sequelizeCli = require('sequelize-cli');
-const sqlite3 = require('sqlite3');
+
 
 // require routes to be used
 const indexRouter = require('./routes');
