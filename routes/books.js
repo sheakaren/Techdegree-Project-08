@@ -13,9 +13,9 @@ router.get('/', (req, res, next) => {
     });
 });
 //     get /books - Shows the full list of books.
-router.get('/books', (req, res) => {
-    res.render("index")
-});
+// router.get('/books', (req, res) => {
+//     res.render("index")
+// });
 //     get /books/new - Shows the create new book form.
 router.get('/new', (req, res, next) => {
     res.render("new-book", {Title: "Fill out this form to add a book to our database"});
