@@ -3,4 +3,8 @@ extends layout.pug
 block content
   h1 Server Error
   p Sorry! There was an unexpected error on the server.
+  br
+  p= error.stack
+  br
+  a.button(href='/books') Back
 
