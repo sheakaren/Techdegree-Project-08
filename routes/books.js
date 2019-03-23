@@ -39,11 +39,13 @@ router.post('/new', (req, res, next) => {
     });
 });
 //     get /books/:id - Shows book detail form.
-router.get('/books/:id', (req, res, next) => {
+router.get('/:id', (req, res, next) => {
     Book.findById(req.params.id).then(function(book) {
+        console.log(book);
         if(book) {
             res.render('update-book',{books: book, title: "Update a book"});
           } else {
+            console.log('book');
             res.render('page-not-found', 404);
           }
         }).catch((err) => {
@@ -52,7 +54,7 @@ router.get('/books/:id', (req, res, next) => {
       });
 
 //     post /books/:id - Updates book info in the database.
-router.post('/books/:id', (req, res, next) => {
+router.post('/:id', (req, res, next) => {
     Book.findById(req.params.id).then(function(book){
         if(book) {
         return book.update(req.body);
