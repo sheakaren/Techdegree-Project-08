@@ -18,12 +18,12 @@ router.get('/', (req, res, next) => {
 // });
 //     get /books/new - Shows the create new book form.
 router.get('/new', (req, res, next) => {
-    res.render("new-book", {Title: "Fill out this form to add a book to our database"});
+    res.render("new-book");
 });
 //     post /books/new - Posts a new book to the database.
 router.post('/new', (req, res, next) => {
     Book.create(req.body).then(function(book){
-        res.redirect('/books/' + book.id);
+        res.redirect('/books');
     }).catch(function(err){
         if(err.name === "SequelizeValidationError") {
             res.render("/books/new", {
@@ -40,12 +40,10 @@ router.post('/new', (req, res, next) => {
 });
 //     get /books/:id - Shows book detail form.
 router.get('/:id', (req, res, next) => {
-    Book.findById(req.params.id).then(function(book) {
-        console.log(book);
+    Book.findByPk(req.params.id).then(function(book) {
         if(book) {
-            res.render('update-book',{books: book, title: "Update a book"});
+            res.render('update-book',{book: book, title: "Update a book"});
           } else {
-            console.log('book');
             res.render('page-not-found', 404);
           }
         }).catch((err) => {
@@ -55,13 +53,13 @@ router.get('/:id', (req, res, next) => {
 
 //     post /books/:id - Updates book info in the database.
 router.post('/:id', (req, res, next) => {
-    Book.findById(req.params.id).then(function(book){
+    Book.findByPk(req.params.id).then(function(book){
         if(book) {
         return book.update(req.body);
         } else {
             res.render('page-not-found', 404);
           }
-    }).then(function(books){
+    }).then(function(book){
         res.redirect("/books");
     }).catch(function(err){
         if(err.name === "SequelizeValidationError") {
@@ -82,7 +80,7 @@ router.post('/:id', (req, res, next) => {
 //     post /books/:id/delete - Deletes a book. Careful, this can’t be undone.
 //         It can be helpful to create a new “test” book to test deleting.
 router.post('/:id/delete', (req, res) => {
-    Book.findById(req.params.id).then(function(book){
+    Book.findByPk(req.params.id).then(function(book){
     if(book) {
         return book.destroy();
     } else {
