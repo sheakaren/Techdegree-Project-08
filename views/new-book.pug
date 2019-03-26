@@ -1,6 +1,7 @@
 extends layout.pug
 
 block content
+    include validationError
     center
         h1 Add a New Book to the Database
         form(action="/books/new", method="post")

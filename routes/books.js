@@ -8,14 +8,11 @@ var Book = require("../models").Book;
 router.get('/', (req, res, next) => {
     Book.findAll({order: [["id", "ASC"]]}).then(function(books){
         res.render("index", {books: books});
-    }).catch(function(err){
-        res.send(500);
+    }).catch(function(error){
+        res.send(500, error);
     });
 });
-//     get /books - Shows the full list of books.
-// router.get('/books', (req, res) => {
-//     res.render("index")
-// });
+
 //     get /books/new - Shows the create new book form.
 router.get('/new', (req, res, next) => {
     res.render("new-book");
@@ -24,18 +21,18 @@ router.get('/new', (req, res, next) => {
 router.post('/new', (req, res, next) => {
     Book.create(req.body).then(function(book){
         res.redirect('/books');
-    }).catch(function(err){
+    }).catch(function(error){
         if(err.name === "SequelizeValidationError") {
             res.render("/books/new", {
                 book: Book.build(req.body),
                 title: "Add a new book",
-                errors: err.errors
+                errors: error.errors
             });
         } else {
-            throw err;
+            throw error;
         }
-    }).catch(function(err){
-        res.send(500);
+    }).catch(function(error){
+        res.send(500, error);
     });
 });
 //     get /books/:id - Shows book detail form.
@@ -46,8 +43,8 @@ router.get('/:id', (req, res, next) => {
           } else {
             res.render('page-not-found', 404);
           }
-        }).catch((err) => {
-          res.send(500);
+        }).catch((error) => {
+          res.send(500, error);
         })
       });
 
@@ -61,46 +58,36 @@ router.post('/:id', (req, res, next) => {
           }
     }).then(function(book){
         res.redirect("/books");
-    }).catch(function(err){
+    }).catch(function(error){
         if(err.name === "SequelizeValidationError") {
             var book = Book.build(req.body);
             book.id = req.params.id;
             res.render("update-book", {
                 book: book,
                 title: "Edit book",
-                errors: err.errors
+                errors: error.errors
             });
         } else {
-            throw err;
+            throw error;
         }
-    }).catch(function(err){
-        res.send(500);
+    }).catch(function(error){
+        res.send(500, error);
     });
 });
 //     post /books/:id/delete - Deletes a book. Careful, this can’t be undone.
 //         It can be helpful to create a new “test” book to test deleting.
-router.post('/:id/delete', (req, res) => {
+router.post('/:id/delete', (req, res, next) => {
     Book.findByPk(req.params.id).then(function(book){
     if(book) {
         return book.destroy();
     } else {
-        res.render('page-not-found', 404);
+        res.send(404, error);
       }
     }).then(function(book){
         res.redirect("/books")
-    }).catch(function(err){
-        res.send(500);
+    }).catch(function(error){
+        res.send(500, error);
     });
 });
-// Set up a custom error handler middleware function that logs the error to the console 
-//     and renders an “Error” view with a friendly message for the user. 
-//     This is useful if the server encounters an error, like trying to view 
-//     the “Books Detail” page for a book :id that doesn’t exist. 
-//     See the error.html file in the example-markup folder to see what this would look like.
-
-// Set up a middleware function that returns a 404 NOT FOUND HTTP status code 
-//     and renders a "Page Not Found" view when the user navigates to a non-existent route, 
-//     such as /error. See the page_found.html file in the example markup folder 
-    // for an example of what this would look like
 
 module.exports = router;

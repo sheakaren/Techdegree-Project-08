@@ -1,6 +1,7 @@
 extends layout.pug
 
 block content
+    include validationError
     center
         h1 Update This Book
         form(action=`/books/${book.id}`, method="post")
