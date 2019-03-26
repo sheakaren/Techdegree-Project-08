@@ -1,7 +1,12 @@
 body {
   padding: 10px 50px 50px;
   font: 22px "Ropa Sans", serif;
-  background-color: #fcfcdf
+  background-color: #fcfcdf;
+  background-image: url('../images/bookstack.png');
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  background-attachment: fixed;
+  background-size: 300px 532px;
 }
 
 a {
@@ -63,6 +68,10 @@ h2 {
   padding-top: 20px;
 }
 
+/* table {
+  background-color: #fcfcdf;
+} */
+
 th {
   border-bottom: 2px solid rgb(226, 194, 14);
   text-align: left;
@@ -105,5 +114,5 @@ input[type=text] {
 
 
 .error {
-  color: rgb(236, 15, 15);
+  color: rgb(175, 151, 15);
 }
