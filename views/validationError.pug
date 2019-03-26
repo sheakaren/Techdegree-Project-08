@@ -1,6 +1,8 @@
-if(errors)
-    h1 Sorry! Do better.
-    ul.error
-        each error in errors
-            li
-                =error.message
+center
+    if(errors)
+        h1 Sorry!
+        h2 Fix the following problems and try again
+        ul.error
+            each error in errors
+                li
+                    =error.message

@@ -25,7 +25,6 @@ router.post('/new', (req, res, next) => {
         if(err.name === "SequelizeValidationError") {
             res.render("/books/new", {
                 book: Book.build(req.body),
-                title: "Add a new book",
                 errors: error.errors
             });
         } else {
@@ -39,7 +38,7 @@ router.post('/new', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
     Book.findByPk(req.params.id).then(function(book) {
         if(book) {
-            res.render('update-book',{book: book, title: "Update a book"});
+            res.render('update-book',{book: book});
           } else {
             res.render('page-not-found', 404);
           }
